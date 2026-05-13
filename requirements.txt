@@ -2,3 +2,4 @@ streamlit
 PyPDF2
 transformers
 torch
+torchvision==0.18.1
