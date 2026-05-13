@@ -8,7 +8,10 @@
 import streamlit as st
 from utilities import summarize_long_text, summarize_text, summarize_pdf
 from pathlib import Path
-
+st.set_page_config(
+    page_title="Whitepaper Summarizer",
+    page_icon="📄"  # hoặc đường dẫn tới file ảnh
+)
 #Đúng rồi Khang 👍 — phần xử lý đặt tên file duy nhất và check file tồn tại trước khi đọc nên nằm trong main.py, vì đó là nơi bạn nhận file upload từ người dùng và quyết định đường dẫn lưu. Các hàm trong utilities chỉ nên tập trung vào logic xử lý (tóm tắt, chunk, extract text), còn việc quản lý file (tên, lưu, kiểm tra) thì để ở tầng ứng dụng (main.py).
 import os
 import uuid
