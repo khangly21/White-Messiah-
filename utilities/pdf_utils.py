@@ -1,7 +1,10 @@
 # chứa các hàm có chức năng xử lý PDF
 # Là nhóm theo chức năng để dễ mở rộng
 import PyPDF2;
-from utilities import summarize_long_text , summarize_text , chunk_text
+#from utilities import summarize_long_text , summarize_text , chunk_text
+#để tránh circular import.
+from .summarizer import summarize_text
+from .text_utils import summarize_long_text, chunk_text
 
 # def summarize_pdf(pdf_path, max_len=200, min_len=50):
 #     summaries = []
