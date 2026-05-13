@@ -771,3 +771,159 @@ Hai thư viện đó có tác dụng bổ sung cho trường hợp **PDF không 
 - Nhờ đó app của bạn có thể xử lý **mọi loại whitepaper**, kể cả bản scan.  
 
 👉 Bạn có muốn mình viết luôn một hàm `summarize_pdf_with_ocr` kết hợp PyPDF2 và OCR fallback, để app tự động chọn phương pháp phù hợp không?
+
+8/
+ASK:
+no! nicolizer thay bằng gì nghe như "đấng cứu thế" ?
+
+COPI:
+À, mình hiểu ý Khang rồi 😄 — bạn muốn thay cái đuôi “Nicolizer” bằng một từ nghe như **“đấng cứu thế”** để tên app vừa hài hước vừa mang cảm giác “cứu rỗi” khỏi whitepaper dài lê thê.  
+
+---
+
+## 📌 Một vài gợi ý thay thế
+- **White Messiah** → nghe như vị cứu tinh của dân crypto khỏi những bản whitepaper dài.  
+- **Paper Savior** → “cứu rỗi” bạn khỏi đống giấy tờ.  
+- **Crypto Redeemer** → vị cứu thế chuyên giải thoát khỏi whitepaper blockchain.  
+- **TL;DR Prophet** → nhà tiên tri của dân “Too Long; Didn’t Read”.  
+- **Digest Messiah** → biến mọi thứ thành digest ngắn gọn, như một phép màu.  
+- **Whitepaper Deliverer** → người mang đến sự giải thoát khỏi whitepaper.  
+
+---
+
+## 🎯 Kết luận
+Nếu bạn muốn giữ phong cách hài hước + “cứu thế”, thì **White Messiah** hoặc **Paper Savior** là những cái tên vừa dễ nhớ vừa đúng vibe.  
+
+👉 Bạn muốn mình brainstorm thêm theo phong cách **châm biếm tôn giáo** (kiểu “Holy TL;DR”, “Saint Summary”) hay theo phong cách **siêu anh hùng cứu thế** (kiểu “Summaryman”, “Captain Digest”)?
+
+9/
+ASK: import streamlit as st
+from utilities import summarize_long_text, summarize_text, summarize_pdf
+from pathlib import Path
+import os
+import uuid
+import PyPDF2;
+from transformers import pipeline
+
+thì trong requirements.txt nên cho vào thư viện gì
+
+COPI:
+Trong `requirements.txt` bạn cần liệt kê các thư viện mà code của bạn đang import hoặc phụ thuộc. Với đoạn code bạn đưa:
+
+```python
+import streamlit as st
+from utilities import summarize_long_text, summarize_text, summarize_pdf
+from pathlib import Path
+import os
+import uuid
+import PyPDF2
+from transformers import pipeline
+```
+
+---
+
+## 📌 Các thư viện cần trong `requirements.txt`
+
+- **streamlit** → để chạy ứng dụng web.  
+- **PyPDF2** → để đọc và trích xuất text từ PDF.  
+- **transformers** → để dùng pipeline tóm tắt (BART, T5, v.v.).  
+- **torch** → backend cho HuggingFace Transformers (bắt buộc nếu dùng model).  
+- **utilities** → đây là module nội bộ của bạn, không cần đưa vào requirements (vì là code tự viết).  
+- **pathlib, os, uuid** → đều là thư viện chuẩn của Python, không cần ghi vào requirements.
+
+---
+
+## ✅ Ví dụ file `requirements.txt`
+
+```
+streamlit
+PyPDF2
+transformers
+torch
+```
+
+Nếu bạn dùng thêm OCR fallback (như mình gợi ý trước đó), thì cần thêm:
+
+```
+pdf2image
+pytesseract
+```
+
+---
+
+## 🎯 Kết luận
+- Bắt buộc: `streamlit`, `PyPDF2`, `transformers`, `torch`.  
+- Tuỳ chọn (nếu OCR): `pdf2image`, `pytesseract`.  
+- Không cần ghi `os`, `uuid`, `pathlib` vì chúng là thư viện chuẩn của Python.  
+
+👉 Bạn có muốn mình viết luôn một `requirements.txt` đầy đủ kèm **phiên bản khuyến nghị** (ví dụ `transformers==4.41.2`, `torch==2.3.0`) để đảm bảo chạy ổn trên Streamlit Cloud không?
+
+10/
+ask:
+pdf2image
+pytesseract
+chúng có tác dụng gì trong trang web:
+
+COPI:
+Hai thư viện đó có tác dụng bổ sung cho trường hợp **PDF không phải text mà là bản scan hình ảnh** (ví dụ whitepaper được lưu dưới dạng ảnh chụp):
+
+- **pdf2image**  
+  👉 Dùng để **chuyển từng trang PDF thành ảnh** (PNG/JPEG). Vì PyPDF2 chỉ đọc được text, nếu PDF là scan thì PyPDF2 sẽ trả về `None`. Lúc này pdf2image giúp bạn có ảnh của từng trang để xử lý tiếp.
+
+- **pytesseract**  
+  👉 Đây là wrapper của Tesseract OCR. Nó sẽ **nhận ảnh từ pdf2image và nhận diện chữ trong ảnh** → trả về text. Nhờ đó bạn có thể tóm tắt cả những whitepaper scan, không chỉ PDF text.
+
+---
+
+## 📊 Quy trình trong web app
+1. Người dùng upload PDF.  
+2. Nếu PyPDF2 đọc được text → tóm tắt như bình thường.  
+3. Nếu PyPDF2 không đọc được (PDF scan) → dùng pdf2image chuyển trang thành ảnh.  
+4. Dùng pytesseract OCR để lấy text từ ảnh.  
+5. Đưa text này vào pipeline tóm tắt.  
+
+---
+
+## 🎯 Kết luận
+- **PyPDF2**: đọc PDF text.  
+- **pdf2image + pytesseract**: fallback cho PDF scan (chỉ có hình ảnh).  
+- Nhờ đó app của bạn có thể xử lý **mọi loại whitepaper**, kể cả bản scan.  
+
+👉 Bạn có muốn mình viết luôn một hàm `summarize_pdf_with_ocr` kết hợp PyPDF2 và OCR fallback, để app tự động chọn phương pháp phù hợp không?
+
+11/
+ASK:
+good, cho Streamlit app một hình ảnh cho tab trình duyệt
+
+COPI:
+Trong Streamlit, để app có **hình ảnh icon cho tab trình duyệt (favicon)** bạn dùng hàm:
+
+```python
+st.set_page_config(
+    page_title="Whitepaper Summarizer",
+    page_icon="📄"  # hoặc đường dẫn tới file ảnh
+)
+```
+
+---
+
+## 📌 Các cách đặt favicon
+- **Emoji**: nhanh gọn, ví dụ `"📄"`, `"⚡"`, `"🤖"`.  
+- **File ảnh**: đặt file `.png` hoặc `.ico` trong thư mục dự án, rồi trỏ tới:
+  ```python
+  st.set_page_config(
+      page_title="Whitepaper Summarizer",
+      page_icon="uploads/icon.png"
+  )
+  ```
+- **Unicode ký tự**: cũng được, nhưng emoji thường đẹp hơn.
+
+---
+
+## 🎯 Kết luận
+- Dùng `st.set_page_config` ở đầu file `main.py`.  
+- `page_icon` có thể là emoji hoặc đường dẫn tới file ảnh.  
+- Đây chính là cách để hiển thị hình ảnh nhỏ (favicon) trên tab trình duyệt khi chạy app.  
+
+👉 Bạn muốn mình gợi ý một **emoji/icon vui nhộn** phù hợp với tên hài hước kiểu “White Messiah” hay “Paper Savior” để làm favicon không?
+
