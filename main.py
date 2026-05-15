@@ -17,7 +17,7 @@ st.set_page_config(
 #-----------video-------------------------
 cwd = Path.cwd()
 relative_path_to_assets = cwd / "assets"
-relative_path_to_video = relative_path_to_assets / "supergrok_720p_30sec"
+relative_path_to_video = relative_path_to_assets / "supergrok_720p_30sec.mp4"
 
 st.video(relative_path_to_video)
 
