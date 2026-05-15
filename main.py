@@ -19,7 +19,8 @@ cwd = Path.cwd()
 relative_path_to_assets = cwd / "assets"
 relative_path_to_video = relative_path_to_assets / "supergrok_720p_30sec.mp4"
 
-st.video(relative_path_to_video)
+# Chuyển Path thành string
+st.video(str(relative_path_to_video))
 
 #Đúng rồi Khang 👍 — phần xử lý đặt tên file duy nhất và check file tồn tại trước khi đọc nên nằm trong main.py, vì đó là nơi bạn nhận file upload từ người dùng và quyết định đường dẫn lưu. Các hàm trong utilities chỉ nên tập trung vào logic xử lý (tóm tắt, chunk, extract text), còn việc quản lý file (tên, lưu, kiểm tra) thì để ở tầng ứng dụng (main.py).
 import os
